@@ -266,6 +266,8 @@ email: при оновленні треба знову підтверджува�
      - Celery for background tasks
      - Docker + Docker Compose
      - Aiogram для інтеграції з Telegram
+     - Celery for background tasks
+     - PyTests 
 * Фронтенд:
      - React
      - JavaScript
