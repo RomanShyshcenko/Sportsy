@@ -371,7 +371,7 @@ Authorization: Bearer eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJzdWIiOiAiMTIzN
 буде виведена сторінка з текстом "Url відновлення не дійсний".
 
 
-## 2. Схема БД 
+## 2. Схема БД
 ### Приклад !!!!!!!!!!!!
 ### [Схема бази](https://dbdiagram.io/d/65152138ffbf5169f0a6f384)
 [![diagram](https://i.postimg.cc/YCKPM7xr/Screenshot-from-2023-10-07-14-00-15.png)](https://postimg.cc/YhRRzJVZ)
