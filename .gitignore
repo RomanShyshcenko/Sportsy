@@ -1,1 +1,16 @@
-.idea
+# PyCharm files
+.idea/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+*.pot
+*.pyc
+
+# Virtual environment
+env/
+app/.env
