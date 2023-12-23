@@ -21,6 +21,7 @@ class Base(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
+        'user.apps.UserConfig',
 
         # Third party apps
         'rest_framework',
@@ -107,7 +108,7 @@ class Base(Configuration):
 
     # DEBUG was set to False as a default for safety
     # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-    DEBUG = strtobool(str(os.getenv('DJANGO_DEBUG', True)))
+    DEBUG = strtobool(str(os.getenv('DJANGO_DEBUG', False)))
 
     # Password Validation
     # https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#module-django.contrib.auth.password_validation
@@ -186,7 +187,7 @@ class Base(Configuration):
     }
 
     # Custom user app
-    # AUTH_USER_MODEL = 'users.User'
+    AUTH_USER_MODEL = 'user.User'
 
     # Django Rest Framework
     REST_FRAMEWORK = {
