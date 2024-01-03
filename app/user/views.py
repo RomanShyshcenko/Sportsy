@@ -1,27 +1,31 @@
+from django.contrib.auth import get_user_model
 from rest_framework import status, permissions
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import (
     CreateAPIView,
     RetrieveAPIView,
 )
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from app.user import serializers
-from app.user.services.get_user import GetUserService
-from app.user.services.update_api_view import CustomUpdateAPIView
+from user import serializers
+from user.services.email_service import EmailService
+from user.services.get_user import GetUserService
+from user.services.update_api_view import CustomUpdateAPIView
 
 
-# Create your views here.
+User = get_user_model()
+
 
 class RegisterUserAPIView(CreateAPIView):
     """Create User with email and password field"""
     serializer_class = serializers.RegisterUserSerializer
-    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
 
 
 class RetrieveUserAPIView(RetrieveAPIView):
     """Retrieve User by JWT Authentication"""
-    authentication_classes = (JSONWebTokenAuthentication,)
+    authentication_classes = (JWTAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.UserSerializer
 
@@ -44,3 +48,22 @@ class ChangePasswordAPIView(CustomUpdateAPIView):
 class ChangeEmailAPIView(CustomUpdateAPIView):
     """Change User email with setting is_confirmed_email to False"""
     serializer_class = serializers.ChangeEmaiSerializer
+
+
+class SendEmailVerification(APIView):
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        user = self.request.user
+        return EmailService.send_activation_email(user)
+
+
+class EmailVerification(APIView):
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        user_id = self.request.query_params.get('user_id', '')
+        confirmation_token = self.request.query_params.get('confirmation_token', '')
+        return EmailService.verify_email(user_id, confirmation_token)

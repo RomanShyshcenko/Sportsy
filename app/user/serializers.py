@@ -1,7 +1,9 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from django.contrib.auth.models import User
 
-from app.user.models import Profile, password_regex
+from user.models import Profile, password_regex
+
+User = get_user_model()
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -59,8 +61,8 @@ class RegisterUserSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=120)
     password = serializers.CharField(max_length=55, validators=[password_regex], write_only=True)
     confirm_password = serializers.CharField(
-        validators=[password_regex], max_length=55,
-        write_only=True, required=True
+        max_length=55, write_only=True,
+        required=True
     )
 
     def validate_email(self, value):

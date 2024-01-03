@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.generics import UpdateAPIView
 from rest_framework import permissions
 from rest_framework.response import Response
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 User = get_user_model()
@@ -11,7 +11,7 @@ User = get_user_model()
 
 class CustomUpdateAPIView(UpdateAPIView):
     """Updates User fields by given serializer class"""
-    authentication_classes = (JSONWebTokenAuthentication,)
+    authentication_classes = (JWTAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     queryset = User
 

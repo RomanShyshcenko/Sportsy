@@ -203,7 +203,7 @@ class Base(Configuration):
         ],
         'DEFAULT_AUTHENTICATION_CLASSES': (
             # Make JWT Auth the default authentication mechanism for Django
-            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
         )
     }
 
