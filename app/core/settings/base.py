@@ -1,11 +1,16 @@
 import os
-from os.path import join
 from pathlib import Path
 from dotenv import load_dotenv
 
 import datetime
 from distutils.util import strtobool
 from configurations import Configuration
+
+# Requires for proper work with Pytest now and Celery in the future
+import configurations
+os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
+configurations.setup()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
@@ -260,3 +265,6 @@ class Base(Configuration):
 
     OLD_PASSWORD_FIELD_ENABLED = True
     LOGOUT_ON_PASSWORD_CHANGE = True
+
+
+Base.setup()

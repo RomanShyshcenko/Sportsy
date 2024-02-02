@@ -1,5 +1,5 @@
 # Core
-Django==4.2.8
+Django==5.0
 django-configurations==2.5
 pytz==2023.3.post1
 python-dotenv==1.0.0
@@ -12,10 +12,10 @@ django-allauth==0.58.2
 # Rest apis
 djangorestframework==3.14.0
 django-rest-auth==0.9.5
-djangorestframework-jwt==1.11.0
+djangorestframework-simplejwt==5.3.1
 django-filter==23.5
 django-cors-headers==4.3.1
 
 # Test
-pytest==7.4.3
+pytest-django==4.8.0
 
