@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status, permissions
+from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import get_object_or_404
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import (
@@ -12,7 +14,7 @@ from user import serializers
 from user.services.email_service import EmailService
 from user.services.get_user import GetUserService
 from user.services.update_api_view import CustomUpdateAPIView
-
+from django.conf import settings
 
 User = get_user_model()
 
@@ -31,7 +33,7 @@ class RetrieveUserAPIView(RetrieveAPIView):
 
     def get_object(self):
         """Get user"""
-        user_uuid = self.request.user.uuid
+        user_uuid = self.request.user.id
         return GetUserService.get_user_by_uuid(user_uuid=user_uuid)
 
 
@@ -43,6 +45,39 @@ class UpdateUserAPIView(CustomUpdateAPIView):
 class ChangePasswordAPIView(CustomUpdateAPIView):
     """Change User password"""
     serializer_class = serializers.ChangePasswordSerializer
+
+
+class ResetPasswordAPIView(CustomUpdateAPIView):
+    serializer_class = serializers.ChangeForgottenPasswordSerializer
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self) -> User:
+        user_id = self.request.query_params.get('user_id', '')
+        return get_object_or_404(User, id=user_id)
+
+    def update(self, request, *args, **kwargs) -> Response:
+        instance = self.get_object()
+        reset_token = self.request.query_params.get('reset_token', '')
+        serializer = self.get_serializer(instance, data=request.data)
+
+        if not default_token_generator.check_token(instance, reset_token):
+            return Response('Token is invalid or expired. Please request another.', status=400)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({"message": "Updated successes"})
+
+        return Response({"message": "failed", "details": serializer.errors})
+
+
+class SendResetPasswordEmailAPIView(APIView):
+    authentication_classes = ()
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        user = get_object_or_404(User, email=request.data['email'])
+        return EmailService.send_password_reset_email(user)
 
 
 class ChangeEmailAPIView(CustomUpdateAPIView):

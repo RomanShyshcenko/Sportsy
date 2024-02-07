@@ -8,24 +8,27 @@ from rest_framework.response import Response
 from django.conf import settings
 
 
+print(settings.EMAIL_HOST_USER)
+
 User = get_user_model()
 
 
 class EmailService:
     @staticmethod
     def send_activation_email(user: User):
+
         confirmation_token = default_token_generator.make_token(user)
         user_id = user.id
-        body = f"Here is your reset password url http://localhost:8000/{reverse('email_verification')}" \
+        body = f"Here is your confirmation url http://localhost:8000/{reverse('user:email_verification')}" \
                f"?user_id={user_id}&confirmation_token={confirmation_token}",
 
         msg = EmailMultiAlternatives(
             # title:
-            "Password Reset for {title}".format(title="..."),
+            "Email verification for {title}".format(title="..."),
             # message:
             body,
             # from:
-            settings.EMAIL_HOST_USER
+            settings.EMAIL_HOST_USER,
             # to:
             [user.email]
         )
@@ -38,8 +41,33 @@ class EmailService:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
-    def send_password_reset_email(user: User):
-        pass
+    def send_password_reset_email(email: str) -> Response:
+        user = get_object_or_404(User, email=email)
+        secret_token = default_token_generator.make_token(user)
+        user_id = user.id
+        body = (
+            f"Here is your reset password url http://localhost:8000/"
+            f"{reverse('user:reset_password')}"
+            f"?user_id={user_id}&reset_token={secret_token}"
+            )
+
+        msg = EmailMultiAlternatives(
+            # title:
+            "Password Reset for {title}".format(title="..."),
+            # message:
+            body,
+            # from:
+            settings.EMAIL_HOST_USER,
+            # to:
+            [user.email]
+        )
+        print(body)
+        try:
+            if msg.send():
+                return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
     def verify_email(user_id: int, confirmation_token: int):

@@ -1,6 +1,5 @@
-import uuid
-
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 User = get_user_model()
 
@@ -20,3 +19,7 @@ class GetUserService:
             "profile_info": profile,
             "phone_number": phone_number
         }
+
+    @staticmethod
+    def get_user_by_email(email: str):
+        user = get_object_or_404(User, email=email)

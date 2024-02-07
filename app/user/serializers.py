@@ -9,8 +9,8 @@ User = get_user_model()
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('id', 'first_name', 'last_name', 'country', 'gender', 'birth_date')
-        read_only_fields = ('id', )
+        fields = ('first_name', 'last_name', 'country',
+                  'gender', 'birth_date')
 
 
 class PhoneNumberSerializer(serializers.Serializer):
@@ -28,22 +28,17 @@ class PhoneNumberSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(read_only=True)
+    profile = ProfileSerializer(required=False)
     phone_number = PhoneNumberSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'avatar', 'profile', 'phone_number']
+        fields = ['id', 'email', 'username', 'profile', 'phone_number']  # 'avatar',
         read_only_fields = ['id', 'email']
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile')
-        profile = instance.profile  # Get the first Address instance
-
-        # update user data
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.save()
+        profile = instance.profile
 
         # update profile data
         if profile_data and profile:
@@ -68,7 +63,6 @@ class RegisterUserSerializer(serializers.Serializer):
     def validate_email(self, value):
         if value and User.objects.filter(email=value).exists():
             raise serializers.ValidationError("User already exists!")
-        # You need to return the value in after validation.
         return value
 
     def validate(self, data):
@@ -85,6 +79,44 @@ class RegisterUserSerializer(serializers.Serializer):
 
         return user
 
+
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        if User.objects.filter(email=email).exists():
+            return data
+        raise serializers.ValidationError("This email doesn't exist!")
+
+
+class ChangeForgottenPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(
+        validators=[password_regex], max_length=55,
+        write_only=True, required=True
+    )
+    confirm_password = serializers.CharField(
+        validators=[password_regex], max_length=55,
+        write_only=True, required=True
+    )
+
+    def validate(self, data):
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+
+        if self.instance.verify_password(new_password):
+            raise serializers.ValidationError('New password cannot match old.')
+
+        elif new_password != confirm_password:
+            raise serializers.ValidationError("Passwords doesn't match.")
+        return data
+
+    def update(self, instance, validated_data):
+        new_password = validated_data.pop('new_password')
+        instance.set_password(new_password)
+        instance.save()
+
+        return instance
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(
@@ -104,13 +136,13 @@ class ChangePasswordSerializer(serializers.Serializer):
         new_password = data.get('new_password')
 
         if not self.instance.verify_password(data.get('old_password')):
-            raise serializers.ValidationError('Pleas correctly enter your old password')
+            raise serializers.ValidationError('Pleas correctly enter your old password.')
 
         elif self.instance.verify_password(new_password):
-            raise serializers.ValidationError('New password cannot match old')
+            raise serializers.ValidationError('New password cannot match old.')
 
         elif new_password != data.get('confirm_password'):
-            raise serializers.ValidationError("Passwords doesn't match")
+            raise serializers.ValidationError("Passwords doesn't match.")
         return data
 
     def update(self, instance, validated_data):
@@ -126,7 +158,7 @@ class ChangeEmaiSerializer(serializers.Serializer):
         email = data.get('email')
 
         if email == self.instance.email:
-            raise serializers.ValidationError("new email can't math old")
+            raise serializers.ValidationError("New email can't math old.")
 
         return data
 

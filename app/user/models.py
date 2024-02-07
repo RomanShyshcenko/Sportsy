@@ -90,6 +90,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=55, blank=True, db_index=True)
     country = models.CharField()  # later replace with django country field
     gender = models.CharField(choices=Gender.choices, max_length=2)
+    birth_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
