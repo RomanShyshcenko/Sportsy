@@ -7,10 +7,6 @@ from distutils.util import strtobool
 from configurations import Configuration
 
 # Requires for proper work with Pytest now and Celery in the future
-import configurations
-os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
-configurations.setup()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
@@ -91,6 +87,8 @@ class Base(Configuration):
     USE_L10N = True
     USE_TZ = True
     LOGIN_REDIRECT_URL = '/'
+
+    PASSWORD_RESET_TIMEOUT = 280  # 5 minute
 
     STATIC_URL = 'static/'
 
@@ -251,7 +249,7 @@ class Base(Configuration):
     EMAIL_HOST = os.getenv('DJANGO_EMAIL_HOST', 'localhost')
 
     EMAIL_PORT = os.getenv('DJANGO_EMAIL_PORT', 1025)
-    EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL_HOST_USER', 'example')
+    EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL_HOST_USER', 'localhost')
     EMAIL_HOST_PASSWORD = os.getenv('DJANGO_EMAIL_HOST_PASSWORD', 'example')
 
     # Automatic mails
@@ -265,6 +263,3 @@ class Base(Configuration):
 
     OLD_PASSWORD_FIELD_ENABLED = True
     LOGOUT_ON_PASSWORD_CHANGE = True
-
-
-Base.setup()
