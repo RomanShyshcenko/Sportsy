@@ -30,7 +30,7 @@ class EmailService:
             # from:
             settings.EMAIL_HOST_USER,
             # to:
-            [user.email]
+            [user.email],
         )
         print(body)
         try:
@@ -41,8 +41,9 @@ class EmailService:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @staticmethod
-    def send_password_reset_email(email: str) -> Response:
-        user = get_object_or_404(User, email=email)
+    def send_password_reset_email(user: User) -> bool:
+        print(user)
+
         secret_token = default_token_generator.make_token(user)
         user_id = user.id
         body = (
@@ -64,10 +65,10 @@ class EmailService:
         print(body)
         try:
             if msg.send():
-                return Response(status=status.HTTP_200_OK)
+                return True
         except Exception as e:
             print(e)
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return False
 
     @staticmethod
     def verify_email(user_id: int, confirmation_token: int):
@@ -83,3 +84,8 @@ class EmailService:
         user.save()
 
         return Response('Email successfully confirmed')
+
+
+{
+    "email": "amigomaroma@gmail.com"
+}

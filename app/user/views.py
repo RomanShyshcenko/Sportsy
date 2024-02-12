@@ -14,8 +14,7 @@ from user import serializers
 from user.services.email_service import EmailService
 from user.services.get_user import GetUserService
 from user.services.update_api_view import CustomUpdateAPIView
-from django.conf import settings
-
+from user.tasks import send_verify_email, send_reset_password_email
 User = get_user_model()
 
 
@@ -76,8 +75,10 @@ class SendResetPasswordEmailAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        user = get_object_or_404(User, email=request.data['email'])
-        return EmailService.send_password_reset_email(user)
+        email = request.data['email']
+        get_object_or_404(User, email=email)
+        send_reset_password_email.delay(email)
+        return Response(status=200)
 
 
 class ChangeEmailAPIView(CustomUpdateAPIView):
@@ -91,7 +92,7 @@ class SendEmailVerification(APIView):
 
     def post(self, request):
         user = self.request.user
-        return EmailService.send_activation_email(user)
+        return send_verify_email(user)
 
 
 class EmailVerification(APIView):

@@ -24,6 +24,30 @@ services:
     depends_on:
       - db
     command: python manage.py runserver 0.0.0.0:8000
+  redis:
+    image: redis:7.2.4-alpine
+    ports:
+      - "6379:6379"
+  celery:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A core.settings worker -l info
+    volumes:
+      - ./app:/app
+
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PASS=supersecretpassword
+    depends_on:
+      - db
+      - redis
+      - web
 
 volumes:
   db:

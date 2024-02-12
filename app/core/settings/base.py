@@ -69,11 +69,11 @@ class Base(Configuration):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv("NAME", 'postgres'),
-            'USER': os.getenv("DB_USER", 'postgres'),
-            'PASSWORD': os.getenv("PASSWORD", 'postgres'),
-            'HOST': os.getenv("HOST", 'localhost'),
-            'PORT': os.getenv("PORT", '5432'),
+            'NAME': os.getenv("POSTGRES_NAME", 'postgres'),
+            'USER': os.getenv("POSTGRES_USER", 'postgres'),
+            'PASSWORD': os.getenv("POSTGRES_PASSWORD", 'postgres'),
+            'HOST': os.getenv("POSTGRES_HOST", 'localhost'),
+            'PORT': os.getenv("POSTGRES_PORT", 5432),
         }
     }
 
@@ -255,6 +255,10 @@ class Base(Configuration):
     # Automatic mails
     DEFAULT_FROM_EMAIL = os.getenv('DJANGO_DEFAULT_FROM_EMAIL', 'hi@example.com')
     ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('DJANGO_ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Example]')
+
+    # celery broker and result
+    CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', "redis://redis:6380/0")
+    CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', "redis://redis:6380/0")
 
     # Account verification email
     ACCOUNT_ADAPTER = 'backend.users.adapter.DefaultAccountAdapterCustom'
