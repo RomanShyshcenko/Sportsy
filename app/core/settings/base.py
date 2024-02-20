@@ -208,12 +208,13 @@ class Base(Configuration):
     SITE_ID = 1
 
     # Google configuration
-    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '13187130725-f3j8mrn0s3loq4olindgq92lnoaeua80.apps.googleusercontent.com'
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', None)
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', None)
 
     # Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
     SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-        'https://www.googleapis.com/auth/userinfo.email'
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
     ]
 
     AUTHENTICATION_BACKENDS = (
