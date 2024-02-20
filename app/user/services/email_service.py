@@ -8,8 +8,6 @@ from rest_framework.response import Response
 from django.conf import settings
 
 
-print(settings.EMAIL_HOST_USER)
-
 User = get_user_model()
 
 
@@ -42,8 +40,6 @@ class EmailService:
 
     @staticmethod
     def send_password_reset_email(user: User) -> bool:
-        print(user)
-
         secret_token = default_token_generator.make_token(user)
         user_id = user.id
         body = (
@@ -84,8 +80,3 @@ class EmailService:
         user.save()
 
         return Response('Email successfully confirmed')
-
-
-{
-    "email": "amigomaroma@gmail.com"
-}

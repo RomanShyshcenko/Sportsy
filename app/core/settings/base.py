@@ -22,24 +22,15 @@ class Base(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-        'user.apps.UserConfig',
-
         # Third party apps
         'rest_framework',
-        'rest_auth',                 # django-rest-auth (API endpoints for User operations)
         'django_filters',            # for filtering rest endpoints
         'django.contrib.sites',      # used by django-allauth
         'corsheaders',
-        'allauth',                   # django-allauth
-        'allauth.account',
-        'rest_auth.registration',    # django-rest-auth using django-allauth
-        'allauth.socialaccount',
-        'allauth.socialaccount.providers.facebook',
-        'allauth.socialaccount.providers.google',
-        'allauth.socialaccount.providers.twitter',
+        'social_django',
 
         # Your apps
-        # 'backend.users',
+        'user.apps.UserConfig',
 
     )
 
@@ -48,18 +39,20 @@ class Base(Configuration):
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'corsheaders.middleware.CorsMiddleware',
-        'allauth.account.middleware.AccountMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'social_django.middleware.SocialAuthExceptionMiddleware',
     )
 
     ALLOWED_HOSTS = ["*"]
     ROOT_URLCONF = 'core.urls'
     SECRET_KEY = os.environ.get('SECRET_KEY')
     WSGI_APPLICATION = 'core.wsgi.application'
+
+    SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
     ADMINS = (
         ('Author', 'example@example.com'),
@@ -104,6 +97,8 @@ class Base(Configuration):
                     'django.contrib.auth.context_processors.auth',
                     'django.contrib.messages.context_processors.messages',
                     'django.template.context_processors.request',
+                    'social_django.context_processors.backends',
+                    'social_django.context_processors.login_redirect',
                 ],
             },
         },
@@ -114,7 +109,7 @@ class Base(Configuration):
     DEBUG = strtobool(str(os.getenv('DJANGO_DEBUG', False)))
 
     # Password Validation
-    # https://docs.djangoproject.com/en/2.0/topics/auth/passwords/#module-django.contrib.auth.password_validation
+    # https://docs.djangoproject.com/en/5.0/topics/auth/passwords/#module-django.contrib.auth.password_validation
     AUTH_PASSWORD_VALIDATORS = [
         {
             'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -210,32 +205,25 @@ class Base(Configuration):
         )
     }
 
-    # django-rest-auth + django-allauth registration (required for django.contrib.sites)
     SITE_ID = 1
 
-    # Enables django-rest-auth to use JWT tokens instead of regular tokens.
-    REST_USE_JWT = True
+    # Google configuration
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '13187130725-f3j8mrn0s3loq4olindgq92lnoaeua80.apps.googleusercontent.com'
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 
-    # Configure the JWTs to expire after 1 hour, and allow users to refresh near-expiration tokens
-    JWT_AUTH = {
-        'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
-        'JWT_ALLOW_REFRESH': True,
-        'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-    }
-
-    REST_AUTH_SERIALIZERS = {
-        'USER_DETAILS_SERIALIZER': 'backend.users.serializers.UserSerializer',
-        'PASSWORD_RESET_SERIALIZER': 'backend.users.serializers.CustomPasswordResetSerializer'
-    }
+    # Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+        'https://www.googleapis.com/auth/userinfo.email'
+    ]
 
     AUTHENTICATION_BACKENDS = (
-        # allauth specific authentication methods, such as login by e-mail
-        'allauth.account.auth_backends.AuthenticationBackend',
-    )
+        "django.contrib.auth.backends.ModelBackend",
+        'social_core.backends.google.GoogleOAuth2',
 
-    REST_AUTH_REGISTER_SERIALIZERS = {
-        'REGISTER_SERIALIZER': 'backend.users.serializers.RegisterSerializer',
-    }
+    )
+    SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:8000/admin/'
+
+    ACTIVATE_JWT = True
 
     # Remove username functionality. Email is identifier (django-allauth)
     ACCOUNT_EMAIL_REQUIRED = True
@@ -243,6 +231,8 @@ class Base(Configuration):
     ACCOUNT_AUTHENTICATION_METHOD = 'email'  # ( = "username" | "email" | "username_email )
     ACCOUNT_UNIQUE_EMAIL = True
     # ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+    SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
     # Email Backend
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

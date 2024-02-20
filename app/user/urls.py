@@ -1,12 +1,9 @@
-from django.urls import path, include
+from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-import sys
 from user import views
-
-app_name = 'user'
 
 urlpatterns = [
     # registration
