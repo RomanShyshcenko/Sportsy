@@ -20,5 +20,6 @@ from django.urls import path, include, re_path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
+    path('', include('subscription.urls')),
     re_path('', include('social_django.urls', namespace='social')),
 ]
