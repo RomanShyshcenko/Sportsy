@@ -5,6 +5,8 @@ from rest_framework_simplejwt.views import (
 )
 from user import views
 
+app_name = 'user'
+
 urlpatterns = [
     # registration
     path('users/create/', views.RegisterUserAPIView.as_view(), name='create'),
@@ -24,6 +26,7 @@ urlpatterns = [
     path('users/forget-password/reset/', views.ResetPasswordAPIView.as_view(),
          name='reset_password'),
     # path('users/'),  # implement phone_number verification later
+    path('users/logout/', views.logout_user_view, name='logout'),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

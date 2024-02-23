@@ -12,7 +12,7 @@ django-allauth==0.58.2
 # Rest apis
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
-social-auth-app-django
+social-auth-app-django==5.4.0
 django-filter==23.5
 django-cors-headers==4.3.1
 

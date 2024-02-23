@@ -1,4 +1,5 @@
 import os
+import configurations
 
 import pytest
 
@@ -10,8 +11,6 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
-
-import configurations
 
 configurations.setup()
 
@@ -93,8 +92,6 @@ def test_update_user(client, django_user_model):
         content_type="application/json",
         HTTP_AUTHORIZATION=f"Bearer {str(token)}"
     )
-    response_content = response.json()
-    print(response_content)
     assert response.status_code == status.HTTP_200_OK
 
 
@@ -113,16 +110,6 @@ def test_email_update(client, django_user_model):
     )
     assert response.status_code == 200
     assert django_user_model.objects.filter(email=data['email'], is_confirmed_email=False).exists()
-
-
-@pytest.mark.django_db
-def test_email_verification(client, django_user_model):
-    pass
-
-
-@pytest.mark.django_db
-def test_email_verification_fail(client):
-    pass
 
 
 @pytest.mark.django_db

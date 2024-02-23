@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,7 +16,14 @@ from user.services.email_service import EmailService
 from user.services.get_user import GetUserService
 from user.services.update_api_view import CustomUpdateAPIView
 from user.tasks import send_verify_email, send_reset_password_email
+from django.contrib.auth import logout
+
 User = get_user_model()
+
+
+def logout_user_view(request):
+    logout(request)
+    return redirect(reverse('user:create'))
 
 
 class RegisterUserAPIView(CreateAPIView):
@@ -47,6 +55,7 @@ class ChangePasswordAPIView(CustomUpdateAPIView):
 
 
 class ResetPasswordAPIView(CustomUpdateAPIView):
+    """Reset user password"""
     serializer_class = serializers.ChangeForgottenPasswordSerializer
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
@@ -71,6 +80,7 @@ class ResetPasswordAPIView(CustomUpdateAPIView):
 
 
 class SendResetPasswordEmailAPIView(APIView):
+    """Sends reset password email"""
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
@@ -87,6 +97,7 @@ class ChangeEmailAPIView(CustomUpdateAPIView):
 
 
 class SendEmailVerification(APIView):
+    """Sends verification for email"""
     authentication_classes = (JWTAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -96,6 +107,7 @@ class SendEmailVerification(APIView):
 
 
 class EmailVerification(APIView):
+    """Verifies email"""
     authentication_classes = ()
     permission_classes = (permissions.AllowAny,)
 
