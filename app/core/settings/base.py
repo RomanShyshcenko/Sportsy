@@ -33,7 +33,7 @@ class Base(Configuration):
 
         # Your apps
         'user.apps.UserConfig',
-        'subscriptions.apps.SubscriptionsConfig',
+        'subscription.apps.SubscriptionConfig',
 
     )
 
