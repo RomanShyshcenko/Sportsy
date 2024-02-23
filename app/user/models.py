@@ -5,6 +5,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django_countries.fields import CountryField
 
 from .manegers import CustomUserManager
 
@@ -88,7 +89,7 @@ class Profile(models.Model):
     user = models.OneToOneField('User', related_name='profile', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=55, blank=True, db_index=True)
     last_name = models.CharField(max_length=55, blank=True, db_index=True)
-    country = models.CharField()  # later replace with django country field
+    country = CountryField(blank_label='(select country)')
     gender = models.CharField(choices=Gender.choices, max_length=2)
     birth_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)

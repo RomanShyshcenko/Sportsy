@@ -19,10 +19,8 @@ def create_user(django_user_model):
     user = django_user_model.objects.create_user(
         email='test@email.com', password='password'
     )
-    profile = Profile.objects.create(user=user, first_name='test', last_name='test')
-    phone_number = PhoneNumbers.objects.create(user=user)
 
-    return user, profile, phone_number
+    return user
 
 
 @pytest.mark.django_db
@@ -63,7 +61,7 @@ def test_create_user(client):
 
 @pytest.mark.django_db
 def test_retrieve_user(client, django_user_model):
-    user, profile, phone_number = create_user(django_user_model)
+    user = create_user(django_user_model)
     token = AccessToken.for_user(user)
     url = reverse('user:retrieve')
     headers = {'HTTP_AUTHORIZATION': f'Bearer {str(token)}'}
@@ -74,7 +72,7 @@ def test_retrieve_user(client, django_user_model):
 
 @pytest.mark.django_db
 def test_update_user(client, django_user_model):
-    user, profile, phone_number = create_user(django_user_model)
+    user = create_user(django_user_model)
     token = AccessToken.for_user(user)
     data = {
         "email": 'test@email.com',
@@ -82,7 +80,7 @@ def test_update_user(client, django_user_model):
         "profile": {
             "first_name": "first_name",
             "last_name": "example",
-            "country": "example",
+            "country": "UA",
             "gender": "MA",
         }
     }
@@ -97,7 +95,7 @@ def test_update_user(client, django_user_model):
 
 @pytest.mark.django_db
 def test_email_update(client, django_user_model):
-    user, profile, phone_number = create_user(django_user_model)
+    user = create_user(django_user_model)
     token = AccessToken.for_user(user)
     data = {
         "email": "example@gmail.com"
@@ -114,7 +112,7 @@ def test_email_update(client, django_user_model):
 
 @pytest.mark.django_db
 def test_change_password(client, django_user_model):
-    user, _, _ = create_user(django_user_model)
+    user = create_user(django_user_model)
     url = reverse('user:change-password')
     data = {
         "old_password": "password",
@@ -130,7 +128,7 @@ def test_change_password(client, django_user_model):
 
 @pytest.mark.django_db
 def test_login(client, django_user_model):
-    user, _, _ = create_user(django_user_model)
+    user = create_user(django_user_model)
     url = reverse('user:token_obtain_pair')
 
     response = client.post(url, data={'email': user.email, "password": 'password'})
@@ -139,7 +137,7 @@ def test_login(client, django_user_model):
 
 @pytest.mark.django_db
 def test_login_fail(client, django_user_model):
-    user, _, _ = create_user(django_user_model)
+    user = create_user(django_user_model)
     url = reverse('user:token_obtain_pair')
 
     response = client.post(url, data={'email': user.email, "password": 'password123'})

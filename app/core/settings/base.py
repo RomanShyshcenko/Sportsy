@@ -26,6 +26,7 @@ class Base(Configuration):
         'rest_framework',
         'corsheaders',
         'social_django',
+        'django_countries',
 
         # for filtering rest endpoints
         'django_filters',
