@@ -21,6 +21,12 @@ class CustomUserManager(BaseUserManager):
 
         return user
 
+    def create_author(self, email, password, **extra_fields):
+        extra_fields.setdefault("is_author", True)
+        if extra_fields.get("is_author") is not True:
+            raise ValueError(_("Author must have is_author=True."))
+        return self.create_user(email, password, **extra_fields)
+
     def create_superuser(self, email, password, **extra_fields):
         """
         Create and save a SuperUser with the given email and password.
