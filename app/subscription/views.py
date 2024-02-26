@@ -1,3 +1,28 @@
-from django.shortcuts import render
+from rest_framework import status
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.contrib.auth import get_user_model
 
-# Create your views here.
+from core.permissions import IsAuthenticatedAuthor
+from subscription import serializers
+from subscription.models import Subscription
+
+User = get_user_model()
+
+
+class SubscriptionCreateAPIView(CreateAPIView):
+    serializer_class = serializers.SubscriptionSerializer
+    permission_classes = [IsAuthenticatedAuthor]
+    authentication_classes = [JWTAuthentication]
+
+
+class SubscriptionRetrieveUpdateAPIView(RetrieveAPIView):
+    serializer_class = serializers.SubscriptionSerializer
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get_object(self):
+        pk = self.request.get('pk')
+        return Subscription.objects.get(pk=pk)

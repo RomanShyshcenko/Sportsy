@@ -27,6 +27,7 @@ class Base(Configuration):
         'corsheaders',
         'social_django',
         'django_countries',
+        "storages",
 
         # for filtering rest endpoints
         'django_filters',
@@ -206,9 +207,19 @@ class Base(Configuration):
         )
     }
 
+    # AWS S3 settings
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_ALLOWED_IMAGES_TYPE = ['png', 'jpg', 'jpeg']
+
+    AWS_ACCESS_KEY_ID = os.getenv('DJANGO_AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('DJANGO_AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('DJANGO_AWS_STORAGE_BUCKET_NAME')
+
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.eu-central-1.amazonaws.com'
+
     SITE_ID = 1
 
-    # Google configuration
+    # Google OAuth2 configuration
     SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', None)
     SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', None)
 

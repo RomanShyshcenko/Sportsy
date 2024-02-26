@@ -2,7 +2,7 @@ from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 
-from user.models import PhoneNumbers, Profile
+from user.models import PhoneNumber, Profile
 
 User = get_user_model()
 
@@ -16,4 +16,4 @@ def create_user_address(sender, instance, created, *args, **kwargs):
 @receiver(post_save, sender=User)
 def create_user_phone_number(sender, instance, created, *args, **kwargs):
     if created:
-        PhoneNumbers.objects.create(user=instance)
+        PhoneNumber.objects.create(user=instance)

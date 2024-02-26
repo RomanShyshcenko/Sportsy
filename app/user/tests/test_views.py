@@ -6,7 +6,6 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from user.models import Profile, PhoneNumbers
 from rest_framework_simplejwt.tokens import AccessToken
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')

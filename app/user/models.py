@@ -56,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ('-created_at',)
 
 
-class PhoneNumbers(models.Model):
+class PhoneNumber(models.Model):
     user = models.OneToOneField(
         User, related_name='phone',
         on_delete=models.CASCADE
@@ -109,4 +109,4 @@ class Profile(models.Model):
 
     class Meta:
         ordering = ('-created_at',)
-        db_table = 'profile'
+        db_table = 'profiles'
