@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -24,5 +25,6 @@ class SubscriptionRetrieveUpdateAPIView(RetrieveAPIView):
     authentication_classes = []
 
     def get_object(self):
-        pk = self.request.get('pk')
-        return Subscription.objects.get(pk=pk)
+        pk = self.request.query_params.get('pk')
+        subscription = get_object_or_404(Subscription, pk=pk)
+        return subscription
