@@ -46,7 +46,7 @@ def test_create_user_fail(client, django_user_model):
         {},  # No data
         {"email": "example@gmail.com", "password": "", "confirm_password": ""},  # No passwords
         {"email": "example_gmail.com", "password": "12345678", "confirm_password": "12345678"},  # Invalid email
-        {"email": "test@email.com", "password": "12345678", "confirm_password": "12345678"},  # Email already exists
+        {"email": "testuser@email.com", "password": "12345678", "confirm_password": "12345678"},  # Email already exists
         {"email": "example@gmail.com", "password": "12345678", "confirm_password": "12345"},  # invalid confirm password
         {"email": "example@gmail.com", "password": "12345678", "confirm_password": "12345678999"},
         # Invalid confirm password
