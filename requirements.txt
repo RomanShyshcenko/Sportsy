@@ -12,9 +12,16 @@ django-allauth==0.58.2
 # Rest apis
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
+
+# django external
 social-auth-app-django==5.4.0
 django-filter==23.5
 django-cors-headers==4.3.1
+django-countries==7.5.1
+django-storages==1.14.2
+boto3==1.34.48
+
+
 
 # Test
 pytest-django==4.8.0
