@@ -14,9 +14,16 @@ os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
 configurations.setup()
 
 
+def create_author(django_user_model):
+    author = django_user_model.objects.create_author(
+        email='testauthor@email.com', password='password'
+    )
+    return author
+
+
 def create_user(django_user_model):
     user = django_user_model.objects.create_user(
-        email='test@email.com', password='password'
+        email='testuser@email.com', password='password'
     )
 
     return user
@@ -52,7 +59,7 @@ def test_create_user_fail(client, django_user_model):
 @pytest.mark.django_db
 def test_create_user(client):
     """Test creating a new user"""
-    payload = {'email': 'test@gmail.com', 'password': 'password12345', 'confirm_password': 'password12345'}
+    payload = {'email': 'testuser@gmail.com', 'password': 'password12345', 'confirm_password': 'password12345'}
     url = reverse('user:create')
     response = client.post(url, data=payload)
     assert response.status_code == status.HTTP_201_CREATED
@@ -74,7 +81,7 @@ def test_update_user(client, django_user_model):
     user = create_user(django_user_model)
     token = AccessToken.for_user(user)
     data = {
-        "email": 'test@email.com',
+        "email": 'testuser@email.com',
         "username": 'test@username',
         "profile": {
             "first_name": "first_name",
