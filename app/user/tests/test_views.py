@@ -1,17 +1,9 @@
-import os
-import configurations
-
 import pytest
 
 from django.urls import reverse
 from rest_framework import status
 
 from rest_framework_simplejwt.tokens import AccessToken
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
-os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
-
-configurations.setup()
 
 
 def create_author(django_user_model):

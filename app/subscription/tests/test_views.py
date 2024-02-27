@@ -1,5 +1,3 @@
-import os
-import configurations
 import pytest
 
 from django.urls import reverse
@@ -9,11 +7,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from user.tests.test_views import create_author
 from subscription.models import Subscription, UserSubscription
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
-os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
-
-configurations.setup()
 
 
 @pytest.fixture
