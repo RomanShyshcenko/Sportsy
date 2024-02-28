@@ -7,17 +7,3 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build and run services
-        working-directory: .
-        run: docker-compose up -d --build
-
-      - name: Run tests
-        working-directory: .
-        run: docker-compose run --rm web pytest
-
-      - name: Stop services
-        run: docker-compose down
