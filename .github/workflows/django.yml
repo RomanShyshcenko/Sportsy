@@ -7,9 +7,19 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    
+    env:
+        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: ${{ .env.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY }}
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: ${{ .env.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET }}
 
+        DJANGO_AWS_ACCESS_KEY_ID: ${{ .env.DJANGO_AWS_ACCESS_KEY_ID }}
+        DJANGO_AWS_SECRET_ACCESS_KEY: ${{ .env.DJANGO_AWS_SECRET_ACCESS_KEY }}
+        DJANGO_AWS_STORAGE_BUCKET_NAME: ${{ .env.DJANGO_AWS_STORAGE_BUCKET_NAME }}
+    
     steps:
       - uses: actions/checkout@v3
+
+        # Add other secrets as needed
       
       - name: Build and run services
         working-directory: .
