@@ -7,3 +7,17 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build and run services
+        working-directory: ./your_app_directory  # Replace with your app directory
+        run: docker-compose up -d --build
+
+      - name: Run tests
+        working-directory: ./your_app_directory  # Replace with your app directory
+        run: docker-compose run --rm web python manage.py test
+
+      - name: Stop services
+        run: docker-compose down
