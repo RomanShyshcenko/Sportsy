@@ -7,18 +7,27 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    
-    env:
-        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY }}
-        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET: ${{ secrets.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET }}
-
-        DJANGO_AWS_ACCESS_KEY_ID: ${{ secrets.DJANGO_AWS_ACCESS_KEY_ID }}
-        DJANGO_AWS_SECRET_ACCESS_KEY: ${{ secrets.DJANGO_AWS_SECRET_ACCESS_KEY }}
-        DJANGO_AWS_STORAGE_BUCKET_NAME: ${{ secrets.DJANGO_AWS_STORAGE_BUCKET_NAME }}
 
     steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - uses: aws-actions/aws-secretsmanager-get-secrets@v1
+        id: get-aws-secret 
+        with:
+          secret-ids: my-production-secrets
+
+      - name: Set environment variables using a shell script
+        run: |
+          cat << EOF > set_env_vars.sh
+          $(echo ${{ steps.get-aws-secret.outputs.secretValue }} | jq -r 'to_entries | .[] | "export \(.key)=\(.value)"')
+          EOF
+          . ./set_env_vars.sh
       - uses: actions/checkout@v3
-      
+
       - name: Build and run services
         working-directory: .
         run: docker-compose up -d --build
@@ -29,3 +38,4 @@ jobs:
 
       - name: Stop services
         run: docker-compose down
+
