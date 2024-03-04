@@ -18,7 +18,7 @@ jobs:
       - uses: aws-actions/aws-secretsmanager-get-secrets@v1
         id: get-aws-secret 
         with:
-          secret-ids: my-production-secrets
+          secret-ids: prod
 
       - name: Set environment variables using a shell script
         run: |
