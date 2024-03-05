@@ -7,18 +7,17 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
-    env:
-      SECRET_KEY: ${{ secrets.SECRET_KEY }} 
-      DJANGO_PAGINATION_LIMIT: ${{ secrets.DJANGO_PAGINATION_LIMIT }} 
-      DJANGO_CORS_ORIGIN_WHITELIST: ${{ secrets.DJANGO_CORS_ORIGIN_WHITELIST }} 
-      DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
  
     
     steps:
       - uses: actions/checkout@v3
       - name: Build and run services
         working-directory: .
+        env:
+            SECRET_KEY: ${{ secrets.SECRET_KEY }} 
+            DJANGO_PAGINATION_LIMIT: ${{ secrets.DJANGO_PAGINATION_LIMIT }} 
+            DJANGO_CORS_ORIGIN_WHITELIST: ${{ secrets.DJANGO_CORS_ORIGIN_WHITELIST }} 
+            DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         run: docker-compose up -d --build
 
       - name: Run tests
