@@ -20,7 +20,7 @@ jobs:
         id: get-aws-secret 
         with:
           secret-ids: |
-            SECRET_KEY,  my/secret/name
+            SECRET_KEY,  secret/key
   
       - name: Set environment variables using a shell script
         run: |
