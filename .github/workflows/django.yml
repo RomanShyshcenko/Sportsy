@@ -19,11 +19,11 @@ jobs:
         id: get-aws-secret 
         with:
           secret-ids: |
-            POSTGRES_PASSWORD
+            prod
   
       - name: Set environment variables using a shell script
         run: |
-          echo "My Database Password: ${{ steps.get_secrets.outputs.POSTGRES_PASSWORD }}"
+          echo "My Database Password: ${{ steps.get_secrets.outputs.prod }}"
       - uses: actions/checkout@v3
 
       - name: Build and run services
