@@ -28,7 +28,8 @@ jobs:
 
         run: |
           echo $SECRET_KEY
-          docker-compose run --rm -e SECRET_KEY=${{ secrets.SECRET_KEY }} web pytest
+          docker-compose run --rm |
+          -e SECRET_KEY=${{ secrets.SECRET_KEY }} e- POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} web pytest
 
       - name: Stop services
         run: docker-compose down
