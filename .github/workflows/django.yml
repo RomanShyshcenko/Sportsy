@@ -24,7 +24,7 @@ jobs:
   
       - name: Set environment variables using a shell script
         run: |
-          run: echo "Secret Value: $MY_SECRET_NAME "    
+          run: echo "Secret Value: $SECRET_KEY "    
       - uses: actions/checkout@v3
 
       - name: Build and run services
