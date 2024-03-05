@@ -14,8 +14,9 @@ jobs:
       DJANGO_CORS_ORIGIN_WHITELIST: ${{ secrets.DJANGO_CORS_ORIGIN_WHITELIST }} 
       DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
  
-
+    
     steps:
+      - uses: actions/checkout@v3
       - name: Build and run services
         working-directory: .
         run: docker-compose up -d --build
