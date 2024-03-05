@@ -22,11 +22,7 @@ jobs:
   
       - name: Set environment variables using a shell script
         run: |
-          echo "The API key is: $SECRET_KEY"
-          cat << EOF > set_env_vars.sh
-          $(echo ${{ steps.get-aws-secret.outputs.secretValue }} | jq -r 'to_entries | .[] | "export \(.key)=\(.value)"')
-          EOF
-          . ./set_env_vars.sh
+          echo "SECRET_KEY=${{ steps.get_secrets.outputs.secret_key }}
       - uses: actions/checkout@v3
 
       - name: Build and run services
