@@ -18,10 +18,11 @@ jobs:
       - uses: aws-actions/aws-secretsmanager-get-secrets@v1
         id: get-aws-secret 
         with:
-          secret-ids: prod
-
+          secret-ids: prod-f2pz2G
+  
       - name: Set environment variables using a shell script
         run: |
+          echo "The API key is: $SECRET_KEY"
           cat << EOF > set_env_vars.sh
           $(echo ${{ steps.get-aws-secret.outputs.secretValue }} | jq -r 'to_entries | .[] | "export \(.key)=\(.value)"')
           EOF
