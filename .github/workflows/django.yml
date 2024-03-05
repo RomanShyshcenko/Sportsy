@@ -30,7 +30,7 @@ jobs:
 
         run: |
           echo $SECRET_KEY
-          docker-compose run --rm web pytest
+          docker-compose run --rm -e SECRET_KEY=${{ secrets.SECRET_KEY }} web pytest
 
       - name: Stop services
         run: docker-compose down
