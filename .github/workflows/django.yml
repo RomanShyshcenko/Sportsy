@@ -18,7 +18,8 @@ jobs:
       - uses: aws-actions/aws-secretsmanager-get-secrets@v1
         id: get-aws-secret 
         with:
-          secret-ids: prod
+          secret-ids: |
+            POSTGRES_PASSWORD
   
       - name: Set environment variables using a shell script
         run: |
