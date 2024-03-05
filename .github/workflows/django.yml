@@ -16,6 +16,7 @@ jobs:
 
       - name: Check secrets
         run: | 
+          ls
           echo $SECRET_KEY
           echo $DJANGO_DEBUG
       - name: Build and run services
