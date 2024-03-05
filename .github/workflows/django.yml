@@ -28,8 +28,9 @@ jobs:
       - name: Run tests
         working-directory: .
 
-        
-        run: docker-compose run --rm web python manage.py test
+        run: |
+          echo $SECRET_KEY
+          docker-compose run --rm web python manage.py test
 
       - name: Stop services
         run: docker-compose down
