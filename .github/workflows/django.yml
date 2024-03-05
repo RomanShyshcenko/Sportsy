@@ -20,11 +20,11 @@ jobs:
         id: get-aws-secret 
         with:
           secret-ids: |
-            prod
+            prod,  my/secret/name
   
       - name: Set environment variables using a shell script
         run: |
-          run: echo "Secret Value: ${{ steps.get-aws-secret.outputs.secretString }}"    
+          run: echo "Secret Value: $MY_SECRET_NAME "    
       - uses: actions/checkout@v3
 
       - name: Build and run services
