@@ -22,7 +22,7 @@ jobs:
   
       - name: Set environment variables using a shell script
         run: |
-          echo "$SECRET_KEY=${{ steps.get_secrets.outputs.secret_key }}"
+          echo "My Database Password: ${{ steps.get_secrets.outputs.db_password }}"
       - uses: actions/checkout@v3
 
       - name: Build and run services
