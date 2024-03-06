@@ -12,14 +12,13 @@ jobs:
 
       - name: Generate .env file
         run: ./create_env_secrets.sh
+        
       - name: Build and run services
         working-directory: .
-
         run: docker-compose up -d --build
 
       - name: Run tests
         working-directory: .
-
         run: |
           echo $SECRET_KEY
           docker-compose run --rm web pytest
