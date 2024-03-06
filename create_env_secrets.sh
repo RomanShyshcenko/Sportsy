@@ -7,7 +7,7 @@ if [ ! -f "vars.txt" ]; then
 fi
 
 # Create the .env file
-touch .env
+touch app/.env
 
 # Read each variable name from the vars.txt file
 while IFS= read -r var_name; do
@@ -16,6 +16,6 @@ while IFS= read -r var_name; do
     echo "Warning: Secret ${var_name} not found in GitHub Actions."
   else
     # Write the variable to the .env file
-    echo "${var_name}=${!var_name}" >> .env
+    echo "${var_name}=${!var_name}" >> app/.env
   fi
 done < "vars.txt"
