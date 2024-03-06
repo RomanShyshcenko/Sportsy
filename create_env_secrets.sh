@@ -1,21 +1,18 @@
 #!/bin/bash
 
-# Check for required files
-if [ ! -f "vars.txt" ]; then
-  echo "Error: vars.txt file not found."
-  exit 1
-fi
+# File containing secret variable names, one per line
+VARS_FILE="vars.txt"
 
-# Create the .env file
-touch app/.env
+# Output .env file
+ENV_FILE="app/.env"
 
-# Read each variable name from the vars.txt file
-while IFS= read -r var_name; do
-  # Check if the secret exists in GitHub Actions
-  if [[ -z "${!var_name}" ]]; then
-    echo "Warning: Secret ${var_name} not found in GitHub Actions."
-  else
-    # Write the variable to the .env file
-    echo "${var_name}=${!var_name}" >> app/.env
-  fi
-done < "vars.txt"
+# Ensure .env file exists
+touch "$ENV_FILE"
+
+# Write each secret variable to .env file
+while IFS= read -r secret_name; do
+    secret_value=$(echo "${{ secrets.$secret_name }}")
+    echo "$secret_name=$secret_value" >> "$ENV_FILE"
+done < "$VARS_FILE"
+
+echo "Secret variables written to $ENV_FILE"
