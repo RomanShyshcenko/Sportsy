@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Generate .env file
+        run: |
           touch app/.env
           while read var_name; do
             echo "$var_name=${{ secrets.$var_name }}" >> app/.env
