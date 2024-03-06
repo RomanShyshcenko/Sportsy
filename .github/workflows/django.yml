@@ -9,19 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Generate .env file
-        run: ./create_env_secrets.sh
-        
+          touch app/.env
+          while read var_name; do
+            echo "$var_name=${{ secrets.$var_name }}" >> app/.env
+          done < vars.txt        
+          
       - name: Build and run services
         working-directory: .
         run: docker-compose up -d --build
 
       - name: Run tests
         working-directory: .
-        run: |
-          echo $SECRET_KEY
-          docker-compose run --rm web pytest
+        run: docker-compose run --rm web pytest
 
       - name: Stop services
         run: docker-compose down
