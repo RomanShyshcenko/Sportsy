@@ -15,7 +15,7 @@ jobs:
           touch app/.env
           while read var_name; do
             echo "$var_name=${{ secrets.$var_name }}" >> app/.env
-          done < vars.txt        
+          done < ./vars.txt        
           
       - name: Build and run services
         working-directory: .
