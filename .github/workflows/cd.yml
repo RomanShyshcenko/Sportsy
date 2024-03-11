@@ -19,5 +19,6 @@ jobs:
     steps:
       - name: Run deploy
         run: |
-            cd /Sportsy
+            cd ..
+            cd Sportsy/
             sudo docker-compose up --build
