@@ -9,12 +9,16 @@ concurrency:
   group: main
   cancel-in-progress: true
 
-
 jobs:
   test:
     name: Test
-    uses: ./.ginhub/workflows/django.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
+      - name: Test with Django
+        uses: ./.github/workflows/django.yml
 
   deploy:
     name: Deploy
@@ -26,7 +30,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
-
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/github
@@ -43,4 +46,3 @@ jobs:
       - name: Run deploy
         run: |
           ssh target "cd Sportsy/ && sudo docker-compose down && sudo docker-compose up --build"
-        
