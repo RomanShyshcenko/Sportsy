@@ -1,22 +1,17 @@
 name: Upload to EC2
 
 on:
-  push:
-    branches:
-      - dev
+
+  workflow_run:
+      workflows: [ "CI Pipeline" ]
+      types:
+        - completed
 
 concurrency:
   group: main
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test with Django
-        uses: RomanShyshcenko/Sportsy/.github/workflows/django.yml
-
   deploy:
     name: Deploy
     needs: test
