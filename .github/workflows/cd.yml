@@ -5,6 +5,10 @@ on:
     branches:
       - dev
 
+concurrency:
+  group: main
+  cancel-in-progress: true
+
 
 jobs:
   test:
