@@ -17,8 +17,9 @@ jobs:
     name: Deploy
     runs-on: self-hosted
     steps:
+      - uses: actions/checkout@v3
       - name: Run deploy
         run: |
-            cd ..
+            ls
             cd Sportsy/
             sudo docker-compose up --build
