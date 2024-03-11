@@ -14,6 +14,10 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+
+      - uses: actions/checkout@v3
+        with:
+          repository: RomanShyshcenko/Sportsy
       - name: Test with Django
         uses: ./.github/workflows/django.yml
 
