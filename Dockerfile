@@ -17,5 +17,4 @@ RUN pip install -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY app /app/
 
-# Expose port 8000 for the Django development server
-EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "core.wsgi:application"]

@@ -11,6 +11,7 @@ services:
       - '5433:5432'
     volumes:
       - db:/var/lib/postgresql/data1
+
   web:
     build:
       context: .
@@ -24,11 +25,21 @@ services:
       - '8000:8000'
     depends_on:
       - db
-    command: python manage.py runserver 0.0.0.0:8000
+  nginx:
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+
   redis:
     image: redis:7.2.4-alpine
     ports:
       - "6379:6379"
+
   celery:
     restart: always
     build:
@@ -37,7 +48,6 @@ services:
     command: celery -A core.settings worker -l info
     volumes:
       - ./app:/app
-
     environment:
       - DB_HOST=db
       - DB_NAME=app
@@ -47,6 +57,7 @@ services:
       - db
       - redis
       - web
+
 
 volumes:
   db:
