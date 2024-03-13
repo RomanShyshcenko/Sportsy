@@ -26,7 +26,7 @@ services:
   nginx:
     restart: always
     build:
-      context: ./nginx/Local
+      context: ./nginx/Prod
     ports:
       - "80:80"
       - "443:443"
