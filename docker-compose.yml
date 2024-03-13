@@ -18,7 +18,6 @@ services:
       dockerfile: Dockerfile
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings  # variables for pytest
-      - DJANGO_CONFIGURATION=Local
     volumes:
       - ./app:/app
     ports:
@@ -28,7 +27,7 @@ services:
   nginx:
     restart: always
     build:
-      context: ./nginx
+      context: ./nginx/Local
     ports:
       - "80:80"
       - "443:443"
