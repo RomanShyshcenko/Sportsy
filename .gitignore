@@ -14,3 +14,7 @@ __pycache__/
 # Virtual environment
 env/
 .env
+.pg_env
+
+# certbot
+persistentdata/*
