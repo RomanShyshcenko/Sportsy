@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings  # variables for pytest
-      - DJANGO_CONFIGURATION=Prod
+      - DJANGO_CONFIGURATION=Production
     volumes:
       - ./app:/app
     ports:
