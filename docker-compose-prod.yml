@@ -1,6 +1,9 @@
 version: '3.8'
 services:
   db:
+    networks:
+      - test
+    privileged: false
     image: postgres:14.1-alpine
     restart: always
     env_file:
@@ -11,6 +14,9 @@ services:
       - ./persistentdata/db:/var/lib/postgresql/data
 
   web:
+    networks:
+      - test
+    privileged: false
     build:
       context: .
       dockerfile: Dockerfile
@@ -25,6 +31,9 @@ services:
       - db
 
   nginx:
+    networks:
+      - test
+    privileged: false
     restart: always
     build:
       context: ./nginx/Prod
@@ -41,6 +50,9 @@ services:
       - ./persistentdata/media:/var/www/media
 
   certbot:
+    networks:
+      - test
+    privileged: false
     image: certbot/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
@@ -50,3 +62,8 @@ services:
 volumes:
   db:
     driver: local
+
+networks:
+  test:
+    external:
+      name: nat
