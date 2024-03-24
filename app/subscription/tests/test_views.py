@@ -20,7 +20,6 @@ def image_file():
 def test_subscription_create_view(client, django_user_model, image_file):
     url = reverse('subscription:create-subscription')
     token = AccessToken.for_user(create_author(django_user_model))
-    headers = {'HTTP_AUTHORIZATION': f'Bearer {str(token)}'}
     response = client.post(
         url,
         {
