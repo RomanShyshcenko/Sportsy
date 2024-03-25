@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from user.tests.test_views import create_author
+from user.tests.test_views import create_author, create_user
 from subscription.models import Subscription, UserSubscription
 
 
@@ -43,7 +43,6 @@ def test_subscription_view(client, django_user_model, image_file):
         price=12
     )
     response = client.get(url + '?pk=2')
-    print(response.status_code)
 
     assert response.status_code == status.HTTP_200_OK
 
